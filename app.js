@@ -9,6 +9,7 @@ const swaggerSpecs = require("./config/swagger");
 
 const regionsRouter = require("./routes/regions");
 const countriesRouter = require("./routes/countries");
+
 const app = express();
 
 app.use(corsMiddleware);
@@ -25,22 +26,20 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+
+app.get("/", (req, res) => {
+  res.send("Server is running on Vercel!");
+});
 app.use("/countries", countriesRouter);
 app.use("/regions", regionsRouter);
 
 app.use(function (err, req, res, next) {
-  res.status(err.status || 500);
-  res.json({
+  res.status(err.status || 500).json({
     error: {
       message: err.message,
       ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
     },
   });
-});
-
-const port = process.env.PORT || 4000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
 });
 
 module.exports = app;
