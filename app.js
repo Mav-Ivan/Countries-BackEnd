@@ -26,9 +26,8 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-
 app.get("/", (req, res) => {
-  res.send("Server is running on Vercel!");
+  res.send("Server is running!");
 });
 app.use("/countries", countriesRouter);
 app.use("/regions", regionsRouter);
@@ -41,5 +40,12 @@ app.use(function (err, req, res, next) {
     },
   });
 });
+
+if (process.env.NODE_ENV !== "production") {
+  const port = process.env.PORT || 4000;
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+}
 
 module.exports = app;
